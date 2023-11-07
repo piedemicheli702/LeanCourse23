@@ -38,14 +38,33 @@ example : min a b = min b a := by
     apply min_le_right
     apply min_le_left
 
-example : max a b = max b a := by
+#check le_max_left
+#check le_max_right
+#check max_le
+
+example : max a b = max b a := by{
+  apply le_antisymm
+  repeat
+    apply max_le
+    apply le_max_right
+    apply le_max_left
+}
+
+lemma lemma1 (h : a ≤ b) : min a c ≤ min b c := by {
+  exact min_le_min_right c h
+}
+
+
+example : min (min a b) c = min a (min b c) := by {
   sorry
-example : min (min a b) c = min a (min b c) := by
-  sorry
+}
+
 theorem aux : min a b + c ≤ min (a + c) (b + c) := by
   sorry
+
 example : min a b + c = min (a + c) (b + c) := by
   sorry
+
 #check (abs_add : ∀ a b : ℝ, |a + b| ≤ |a| + |b|)
 
 example : |a| - |b| ≤ |a - b| :=

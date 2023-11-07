@@ -12,7 +12,7 @@ example : ∃ x : ℝ, 2 < x ∧ x < 3 := by
 example : ∃ x : ℝ, 2 < x ∧ x < 3 := by
   have h1 : 2 < (5 : ℝ) / 2 := by norm_num
   have h2 : (5 : ℝ) / 2 < 3 := by norm_num
-  use 5 / 2, h1, h2
+  use (5 / 2), h1, h2
 
 example : ∃ x : ℝ, 2 < x ∧ x < 3 := by
   have h : 2 < (5 : ℝ) / 2 ∧ (5 : ℝ) / 2 < 3 := by norm_num

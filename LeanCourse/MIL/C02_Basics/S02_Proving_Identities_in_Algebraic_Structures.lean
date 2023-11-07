@@ -53,13 +53,15 @@ theorem neg_add_cancel_left (a b : R) : -a + (a + b) = b := by
 
 -- Prove these:
 theorem add_neg_cancel_right (a b : R) : a + b + -b = a := by
-  sorry
+  rw[add_assoc, add_right_neg, add_zero]
 
 theorem add_left_cancel {a b c : R} (h : a + b = a + c) : b = c := by
-  sorry
+  rw [← neg_add_cancel_right b a, add_comm, ← add_assoc, h, add_comm a c]
+  rw [add_assoc, add_right_neg, add_zero]
 
 theorem add_right_cancel {a b c : R} (h : a + b = c + b) : a = c := by
-  sorry
+  rw [← neg_add_cancel_left b a, add_comm b a, h, ← add_assoc, add_comm]
+  rw [← add_assoc, add_right_neg, zero_add]
 
 theorem mul_zero (a : R) : a * 0 = 0 := by
   have h : a * 0 + a * 0 = a * 0 + 0 := by
@@ -67,7 +69,9 @@ theorem mul_zero (a : R) : a * 0 = 0 := by
   rw [add_left_cancel h]
 
 theorem zero_mul (a : R) : 0 * a = 0 := by
-  sorry
+  have hyp : 0 * a + 0 * a = 0 + 0 * a := by
+   rw [← add_mul, add_zero, zero_add]
+  rw [add_right_cancel hyp]
 
 theorem neg_eq_of_add_eq_zero {a b : R} (h : a + b = 0) : -a = b := by
   sorry
