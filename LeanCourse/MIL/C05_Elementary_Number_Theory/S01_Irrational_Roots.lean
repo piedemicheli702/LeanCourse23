@@ -52,21 +52,33 @@ example (a b c : Nat) (h : a * b = a * c) (h' : a ≠ 0) : b = c :=
 
 example {m n : ℕ} (coprime_mn : m.Coprime n) : m ^ 2 ≠ 2 * n ^ 2 := by
   intro sqr_eq
-  have : 2 ∣ m := by
-    sorry
-  obtain ⟨k, meq⟩ := dvd_iff_exists_eq_mul_left.mp this
-  have : 2 * (2 * k ^ 2) = 2 * n ^ 2 := by
+  have h1 : 2 ∣ m := by {
+    apply even_of_even_sqr
+    rw [sqr_eq]
+    norm_num
+  }
+  obtain ⟨k, meq⟩ := dvd_iff_exists_eq_mul_left.mp h1
+  have h2 : 2 * (2 * k ^ 2) = 2 * n ^ 2 := by
     rw [← sqr_eq, meq]
     ring
-  have : 2 * k ^ 2 = n ^ 2 :=
-    sorry
-  have : 2 ∣ n := by
-    sorry
-  have : 2 ∣ m.gcd n := by
-    sorry
-  have : 2 ∣ 1 := by
-    sorry
-  norm_num at this
+  have h3 : 2 * k ^ 2 = n ^ 2 := by {
+    rw [mul_right_inj'] at h2
+    assumption
+    trivial
+  }
+  have h4 : 2 ∣ n := by {
+    apply even_of_even_sqr
+    exact Dvd.intro (k ^ 2) h3
+  }
+  have h5 : 2 ∣ m.gcd n := by {
+    exact Nat.dvd_gcd h1 h4
+  }
+  have h6 : 2 ∣ 1 := by {
+    unfold Nat.Coprime at coprime_mn
+    rw [coprime_mn] at h5
+    assumption
+  }
+  norm_num at h6
 
 example {m n p : ℕ} (coprime_mn : m.Coprime n) (prime_p : p.Prime) : m ^ 2 ≠ p * n ^ 2 := by
   sorry

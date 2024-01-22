@@ -22,8 +22,30 @@ local macro_rules | `($x ^ $y) => `(HPow.hPow $x $y)
 
 
 open Nat Finset BigOperators in
+
+lemma gauss_sum {n : ℕ} : ∑ x in range n, x = (n * (n + 1)) / 2 := by {
+  induction' n with n ih
+  · norm_num
+  · rw [sum_range_succ]
+    rw [ih]
+
+
+}
+
+
 lemma exercise4_1 (n : ℕ) :
-    (∑ i in range (n + 1), i ^ 3 : ℚ) = (∑ i in range (n + 1), i : ℚ) ^ 2 := by sorry
+    (∑ i in range (n + 1), i ^ 3 : ℚ) = (∑ i in range (n + 1), i : ℚ) ^ 2 := by {
+      induction' n with n ih
+      · norm_num
+      · rw [eq_comm]
+        rw [Finset.sum_range_succ]
+        simp at ih
+        rw [add_pow_two]
+        rw [← ih]
+        simp
+        h
+
+    }
 
 open Set in
 /-

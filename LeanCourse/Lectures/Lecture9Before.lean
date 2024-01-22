@@ -202,7 +202,7 @@ Of course the type class instance system knows that a subgroup of a group inheri
 structure.
 -/
 
-example {G : Type*} [Group G] (H : Subgroup G) : Group H := by infer_instance
+example {G : Type*} [Group G] (H : Subgroup G) : Group H := by exact inferInstance
 
 /-
 But note this is subtler than it looks. The object `H` is not a type, but Lean automatically
@@ -324,7 +324,7 @@ a permutation group, namely `Perm G`.
 -/
 
 def CayleyIsoMorphism (G : Type*) [Group G] : G ≃* (toPermHom G G).range := by
-  exact?
+  exact Equiv.Perm.subgroupOfMulAction G G
 
 /-
 Note that nothing before the above definition required having a group rather than a monoid (or any
@@ -360,8 +360,23 @@ open Subgroup
 /- Define the conjugate of a subgroup. -/
 def conjugate (x : G) (H : Subgroup G) : Subgroup G where
   carrier := {a : G | ∃ h, h ∈ H ∧ a = x * h * x⁻¹}
-  one_mem' := by sorry
-  inv_mem' := by sorry
+  one_mem' := by {
+    simp
+    use 1
+    constructor
+    · apply one_mem
+    · group
+  }
+  inv_mem' := by {
+    simp
+    intro x₁ x₂ hx₂ hx₁
+    use x₂⁻¹
+    constructor
+    · apply inv_mem
+      assumption
+    · rw [hx₁]
+      group
+  }
   mul_mem' := by sorry
 
 /- Now let's prove that a group acts on its own subgroups by conjugation. -/
