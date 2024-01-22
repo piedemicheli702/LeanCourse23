@@ -28,7 +28,7 @@ notation "𝟙" => One₁.one
 
 example {α : Type} [One₁ α] : α := 𝟙
 
-example {α : Type} [One₁ α] : (𝟙 : α) = 𝟙 := rfl
+example {α : Type} [One₁ α] : (One₁.one : α) = 𝟙 := rfl
 
 
 class Dia₁ (α : Type) where
@@ -113,11 +113,12 @@ example {M : Type} [Monoid₁ M] {a b c : M} (hba : b ⋄ a = 𝟙) (hac : a ⋄
   rw [← one_dia c, ← hba, dia_assoc, hac, dia_one b]
 
 
-lemma inv_eq_of_dia [Group₁ G] {a b : G} (h : a ⋄ b = 𝟙) : a⁻¹ = b :=
-  sorry
+lemma inv_eq_of_dia [Group₁ G] {a b : G} (h : a ⋄ b = 𝟙) : a⁻¹ = b := by
+  have h₀ : a⁻¹ ⋄ a = 𝟙 := by rw [inv_dia]
+  exact left_inv_eq_right_inv₁ h₀ h
 
-lemma dia_inv [Group₁ G] (a : G) : a ⋄ a⁻¹ = 𝟙 :=
-  sorry
+lemma dia_inv [Group₁ G] (a : G) : a ⋄ a⁻¹ = 𝟙 := by
+  rw [← inv_dia a⁻¹, inv_eq_of_dia (inv_dia a)]
 
 
 
@@ -176,7 +177,6 @@ attribute [simp] Group₃.inv_mul AddGroup₃.neg_add
 lemma inv_eq_of_mul [Group₃ G] {a b : G} (h : a * b = 1) : a⁻¹ = b :=
   sorry
 
-
 @[to_additive (attr := simp)]
 lemma Group₃.mul_inv {G : Type} [Group₃ G] {a : G} : a * a⁻¹ = 1 := by
   sorry
@@ -205,7 +205,7 @@ class Ring₃ (R : Type) extends AddGroup₃ R, Monoid₃ R, MulZeroClass R wher
 instance {R : Type} [Ring₃ R] : AddCommGroup₃ R :=
 { Ring₃.toAddGroup₃ with
   add_comm := by
-    sorry }
+    sorry}
 
 instance : Ring₃ ℤ where
   add := (· + ·)
